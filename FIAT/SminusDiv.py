@@ -44,7 +44,7 @@ class TrimmedSerendipity(FiniteElement):
             for entity in entities:
                 entity_ids[top_dim][entity] = []
 
-        #3-d case.
+        # 3-d case.
         if dim == 3:
             entity_ids[3] = {}
             for j in sorted(flat_topology[2]):
@@ -60,7 +60,7 @@ class TrimmedSerendipity(FiniteElement):
             if (degree == 4):
                 interior_tilde_ids += choose_ijk_total(degree - 2) - (degree - 1) - (degree - 1) + 1
             if (degree > 4):
-                #interior_tilde_ids += choose_ijk_total(degree - 2) - (2 * degree - 1)
+                # interior_tilde_ids += choose_ijk_total(degree - 2) - (2 * degree - 1)
                 interior_tilde_ids += choose_ijk_total(degree - 2) - (degree - 1) - (degree - 1) + 1
             if degree == 1:
                 interior_tilde_ids = 0
@@ -73,7 +73,7 @@ class TrimmedSerendipity(FiniteElement):
 
             if(degree >= 2):
                 entity_ids[2][0] = list(range(cur, cur + 2*triangular_number(degree - 2) + degree))
-                #entity_ids[2][0] = list(range(cur, cur + 2*triangular_number(degree - 2)))
+                # entity_ids[2][0] = list(range(cur, cur + 2*triangular_number(degree - 2)))
 
             cur += 2*triangular_number(degree - 2) + degree
         formdegree = dim - 1
@@ -107,14 +107,18 @@ class TrimmedSerendipity(FiniteElement):
     def degree(self):
         return self._degree
 
+
     def get_nodal_basis(self):
         raise NotImplementedError("get_nodal_basis not implemented for trimmed serendipity")
+
 
     def get_dual_set(self):
         raise NotImplementedError("get_dual_set is not implemented for trimmed serendipity")
 
+
     def get_coeffs(self):
         raise NotImplementedError("get_coeffs not implemented for trimmed serendipity")
+
 
     def tabulate(self, order, points, entity=None):
 
@@ -146,24 +150,30 @@ class TrimmedSerendipity(FiniteElement):
 
         return phivals
 
+
     def entity_dofs(self):
         """Return the map of topological entities to degrees of
         freedom for the finite element."""
         return self.entity_ids
+
 
     def entity_closure_dofs(self):
         """Return the map of topological entities to degrees of
         freedom on the closure of those entities for the finite element."""
         return self.entity_closure_ids
 
+
     def value_shape(self):
         return (self.fdim,)
+
 
     def dmats(self):
         raise NotImplementedError
 
+
     def get_num_members(self, arg):
         raise NotImplementedError
+
 
     def space_dimension(self):
         return int(len(self.basis[tuple([0] * self.fdim)])/self.fdim)
@@ -203,17 +213,17 @@ class TrimmedSerendipityDiv(TrimmedSerendipity):
             super(TrimmedSerendipityDiv, self).__init__(ref_el=ref_el, degree=degree, mapping="contravariant piola")
     
         else:
-            ##Put all 2 dimensional stuff here.
+            # #Put all 2 dimensional stuff here.
             if degree < 1:
                 raise Exception("Trimmed serendipity face elements only valid for k >= 1")
 
-            #flat_el = flatten_reference_cube(ref_el)
-            #verts = flat_el.get_vertices()
+            # flat_el = flatten_reference_cube(ref_el)
+            # verts = flat_el.get_vertices()
         
             EL = e_lambda_1_2d_part_one(degree, dx, dy, x_mid, y_mid)
             if degree >= 2:
                 FL = trimmed_f_lambda_2d(degree, dx, dy, x_mid, y_mid)
-                #FL = F_lambda_1_2d(degree, dx, dy, x_mid, y_mid)
+                # FL = F_lambda_1_2d(degree, dx, dy, x_mid, y_mid)
             else:
                 FL = ()
             Sminus_list = EL + FL
@@ -269,7 +279,7 @@ def f_lambda_2_3d(degree, dx, dy, dz, x_mid, y_mid, z_mid):
 
     FL = tuple([(-leg(j, y_mid) * leg(k, z_mid) * a, 0, 0)
                 for a in dx for k in range(0, degree) for j in range(0, degree - k)] +
-               [(0, leg(j, x_mid) * leg(k, z_mid) * b, 0) 
+               [(0, leg(j, x_mid) * leg(k, z_mid) * b, 0)
                 for b in dy for k in range(0, degree) for j in range(0, degree - k)] +
                [(0, 0, -leg(j, x_mid) * leg(k, y_mid) * c)
                 for c in dz for k in range(0, degree) for j in range(0, degree - k)])
@@ -284,10 +294,11 @@ def I_lambda_2_3d_pieces(current_deg, dx, dy, dz, x_mid, y_mid, z_mid):
             ILpiece += tuple([(0, 0, -leg(j, x_mid) * leg(k, y_mid) * leg(current_deg - 2 - j - k, z_mid) *
                             dz[0] * dz[1])]+
                             [(0, -leg(j, x_mid) * leg(k, y_mid) * leg(current_deg - 2 - j - k, z_mid) *
-                            dy[0] * dy[1] ,0)] +
+                             dy[0] * dy[1], 0)] +
                             [(-leg(j, x_mid) * leg(k, y_mid) * leg(current_deg - 2 - j - k, z_mid) * dx[0] *
-                            dx[1], 0, 0)])
+                             dx[1], 0, 0)])
     return ILpiece
+
 
 """ def i_lambda_2_3d_normal(degree, dx, dy, dz, x_mid, y_mid, z_mid):
 
@@ -301,7 +312,7 @@ def I_lambda_2_3d_pieces(current_deg, dx, dy, dz, x_mid, y_mid, z_mid):
                 dz[0] * dz[1])
                 for l in range(2, degree) for j in range(l-1) for k in range(j+1)])
 
-    return IL   """ 
+    return IL   """
 
 
 def I_lambda_2_3d_tilde(degree, dx, dy, dz, x_mid, y_mid, z_mid):
@@ -310,15 +321,15 @@ def I_lambda_2_3d_tilde(degree, dx, dy, dz, x_mid, y_mid, z_mid):
                      [(0, leg(degree - 2, y_mid) * dy[0] * dy[1], 0)] +
                      [(leg(degree - 2, x_mid) * dx[0] * dx[1], 0, 0)])
     IL_tilde += tuple([(leg(degree - j - 2, x_mid) * leg(j, y_mid) * dx[0] * dx[1], leg(degree - j - 1, x_mid) *
-                      leg(j - 1, y_mid) * dy[0] * dy[1], 0) for j in range(1, degree - 1)] +
+                       leg(j - 1, y_mid) * dy[0] * dy[1], 0) for j in range(1, degree - 1)] +
                       [(leg(degree - j - 2, x_mid) * leg(j, z_mid) * dx[0] * dx[1], 0, leg(degree - j - 1, x_mid) *
-                      leg(j - 1, z_mid) * dz[0] * dz[1]) for j in range(1, degree - 1)] +
+                       leg(j - 1, z_mid) * dz[0] * dz[1]) for j in range(1, degree - 1)] +
                       [(0, leg(degree - j - 2, y_mid) * leg(j, z_mid) * dy[0] * dy[1], leg(degree - j - 1, y_mid) *
-                      leg(j - 1, z_mid) * dz[0] * dz[1]) for j in range(1, degree - 1)])
+                       leg(j - 1, z_mid) * dz[0] * dz[1]) for j in range(1, degree - 1)])
     for k in range(1, degree - 2):
         for l in range(1, degree - 1 - k):
             j = degree - 2 - k - l
-            IL_tilde += tuple([(-leg(j, x_mid) * leg(k, y_mid) * leg(l, z_mid) * dx[0] * dx[1], 
+            IL_tilde += tuple([(-leg(j, x_mid) * leg(k, y_mid) * leg(l, z_mid) * dx[0] * dx[1],
                                 leg(j + 1, x_mid) * leg(k - 1, y_mid) * leg(l, z_mid) * dy[0] * dy[1],
                                 -leg(j + 1, x_mid) * leg(k, y_mid) * leg(l - 1, z_mid) * dz[0] * dz[1])])
     return IL_tilde
@@ -328,11 +339,12 @@ def I_lambda_2_3d(degree, dx, dy, dz, x_mid, y_mid, z_mid):
     IL = tuple([])
     for j in range(2, degree):
         IL += I_lambda_2_3d_pieces(j, dx, dy, dz, x_mid, y_mid, z_mid)
-    #IL += i_lambda_2_3d_normal(degree, dx, dy, dz, x_mid, y_mid, z_mid)
+    # IL += i_lambda_2_3d_normal(degree, dx, dy, dz, x_mid, y_mid, z_mid)
     IL += I_lambda_2_3d_tilde(degree, dx, dy, dz, x_mid, y_mid, z_mid)
     return IL
 
-#Everything for 2-d should work already.
+
+# Everything for 2-d should work already.
 def e_lambda_1_2d_part_one(deg, dx, dy, x_mid, y_mid):
     EL = tuple(
         [(0, -leg(j, y_mid) * dx[0]) for j in range(deg)] +
@@ -417,9 +429,9 @@ def F_lambda_1_2d(deg, dx, dy, x_mid, y_mid):
 
 
 def trimmed_f_lambda_2d(deg, dx, dy, x_mid, y_mid):
-    #FL = f_lambda_1_2d_trim(deg, dx, dy, x_mid, y_mid)
+    # FL = f_lambda_1_2d_trim(deg, dx, dy, x_mid, y_mid)
     FL = F_lambda_1_2d(deg, dx, dy, x_mid, y_mid)
     FLT = f_lambda_1_2d_tilde(deg, dx, dy, x_mid, y_mid)
     result = FL + FLT
- #   return FL
+    #   return FL
     return result
