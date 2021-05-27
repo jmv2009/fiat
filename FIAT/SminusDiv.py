@@ -421,5 +421,5 @@ def trimmed_f_lambda_2d(deg, dx, dy, x_mid, y_mid):
     FL = F_lambda_1_2d(deg, dx, dy, x_mid, y_mid)
     FLT = f_lambda_1_2d_tilde(deg, dx, dy, x_mid, y_mid)
     result = FL + FLT
- #   return FL
+    #   return FL
     return result
