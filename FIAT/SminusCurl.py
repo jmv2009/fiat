@@ -49,8 +49,8 @@ class TrimmedSerendipity(FiniteElement):
         # 3-d case.
         if dim == 3:
             entity_ids[3] = {}
-            for l in sorted(flat_topology[1]):
-                entity_ids[1][l] = list(range(cur, cur + degree))
+            for p in sorted(flat_topology[1]):
+                entity_ids[1][p] = list(range(cur, cur + degree))
                 cur = cur + degree
             if (degree > 1):
                 face_ids = degree
@@ -191,7 +191,7 @@ class TrimmedSerendipityCurl(TrimmedSerendipity):
                 raise Exception("Trimmed serendipity face elements only valid for dimensions 2 and 3")
 
         verts = flat_el.get_vertices()
-        
+
         dx = ((verts[-1][0] - x)/(verts[-1][0] - verts[0][0]), (x - verts[0][0])/(verts[-1][0] - verts[0][0]))
         dy = ((verts[-1][1] - y)/(verts[-1][1] - verts[0][1]), (y - verts[0][1])/(verts[-1][1] - verts[0][1]))
         x_mid = 2*x-(verts[-1][0] + verts[0][0])
@@ -390,14 +390,14 @@ def f_lambda_1_3d(deg, dx, dy, dz, x_mid, y_mid, z_mid):
 #    return F
 
 def I_lambda_1_3d_pieces(deg, dx, dy, dz, x_mid, y_mid, z_mid):
-    I = ()
+    R = ()
     for j in range(0, deg - 3):
         for k in range(0, deg - 3 - j):
-            l = deg - 4 - j - k
-            I += tuple([(leg(j, x_mid) * leg(k, y_mid) * leg(l, z_mid) * dy[0] * dy[1] * dz[0] * dz[1], 0, 0)] +
-                       [(0, leg(j, x_mid) * leg(k, y_mid) * leg(l, z_mid) * dx[0] * dx[1] * dz[0] * dz[1], 0)] +
-                       [(0, 0, leg(j, x_mid) * leg(k, y_mid) * leg(l, z_mid) * dx[0] * dx[1] * dy[0] * dy[1])])
-    return I
+            m = deg - 4 - j - k
+            R += tuple([(leg(j, x_mid) * leg(k, y_mid) * leg(m, z_mid) * dy[0] * dy[1] * dz[0] * dz[1], 0, 0)] +
+                       [(0, leg(j, x_mid) * leg(k, y_mid) * leg(m, z_mid) * dx[0] * dx[1] * dz[0] * dz[1], 0)] +
+                       [(0, 0, leg(j, x_mid) * leg(k, y_mid) * leg(m, z_mid) * dx[0] * dx[1] * dy[0] * dy[1])])
+    return R
 
 
 def I_lambda_tilde_1_3d(deg, dx, dy, dz, x_mid, y_mid, z_mid):
@@ -426,11 +426,11 @@ def I_lambda_tilde_1_3d(deg, dx, dy, dz, x_mid, y_mid, z_mid):
 
 
 def I_lambda_1_3d(deg, dx, dy, dz, x_mid, y_mid, z_mid):
-    I = ()
+    R = ()
     for i in range(4, deg):
-        I += I_lambda_1_3d_pieces(i, dx, dy, dz, x_mid, y_mid, z_mid)
-    I += I_lambda_tilde_1_3d(deg, dx, dy, dz, x_mid, y_mid, z_mid)
-    return I
+        R += I_lambda_1_3d_pieces(i, dx, dy, dz, x_mid, y_mid, z_mid)
+    R += I_lambda_tilde_1_3d(deg, dx, dy, dz, x_mid, y_mid, z_mid)
+    return R
 
 
 # Everything for 2-d should work already.
