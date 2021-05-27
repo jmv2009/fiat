@@ -281,10 +281,10 @@ def f_lambda_2_3d(degree, dx, dy, dz, x_mid, y_mid, z_mid):
 def I_lambda_2_3d_pieces(current_deg, dx, dy, dz, x_mid, y_mid, z_mid):
     assert current_deg > 1, 'invalid for i = 1'
     ILpiece = tuple([])
-    for j in range(0, current_deg -1):
+    for j in range(0, current_deg - 1):
         for k in range(0, current_deg - 1 - j):
             ILpiece += tuple([(0, 0, -leg(j, x_mid) * leg(k, y_mid) * leg(current_deg - 2 - j - k, z_mid) *
-                              dz[0] * dz[1])]+
+                              dz[0] * dz[1])] +
                              [(0, -leg(j, x_mid) * leg(k, y_mid) * leg(current_deg - 2 - j - k, z_mid) *
                               dy[0] * dy[1], 0)] +
                              [(-leg(j, x_mid) * leg(k, y_mid) * leg(current_deg - 2 - j - k, z_mid) * dx[0] *
@@ -320,10 +320,10 @@ def I_lambda_2_3d_tilde(degree, dx, dy, dz, x_mid, y_mid, z_mid):
                        leg(j - 1, z_mid) * dz[0] * dz[1]) for j in range(1, degree - 1)])
     for k in range(1, degree - 2):
         for R in range(1, degree - 1 - k):
-            m = degree - 2 - k - l
-            IL_tilde += tuple([(-leg(j, x_mid) * leg(k, y_mid) * leg(m, z_mid) * dx[0] * dx[1],
-                                leg(j + 1, x_mid) * leg(k - 1, y_mid) * leg(m, z_mid) * dy[0] * dy[1],
-                                -leg(j + 1, x_mid) * leg(k, y_mid) * leg(m - 1, z_mid) * dz[0] * dz[1])])
+            m = degree - 2 - k - R
+            IL_tilde += tuple([(-leg(m, x_mid) * leg(k, y_mid) * leg(R, z_mid) * dx[0] * dx[1],
+                                leg(m + 1, x_mid) * leg(k - 1, y_mid) * leg(R, z_mid) * dy[0] * dy[1],
+                                -leg(m + 1, x_mid) * leg(k, y_mid) * leg(R - 1, z_mid) * dz[0] * dz[1])])
     return IL_tilde
 
 
