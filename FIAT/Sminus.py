@@ -329,7 +329,7 @@ def f_lambda_1_3d_trimmed(max_deg, dx, dy, dz, x_mid, y_mid, z_mid):
     FL += tuple([(0, 0, leg(max_deg - 2, y_mid) * dx[0] * dy[0] * dy[1])])
     for j in range(1, max_deg - 1):
         FL += tuple([(0, leg(j, y_mid) * leg(max_deg - j - 2, z_mid) * dx[0] * dz[0] * dz[1],
-                        -leg(j - 1, y_mid) * leg(max_deg - j - 1, z_mid) * dx[0] * dy[0] * dy[1])])
+                     -leg(j - 1, y_mid) * leg(max_deg - j - 1, z_mid) * dx[0] * dy[0] * dy[1])])
     # #Assignment to face x = 0, F
     for j in range(1, max_deg - 1):
         k = max_deg - j - 2
@@ -527,4 +527,3 @@ class TrimmedSerendipityFace(TrimmedSerendipity):
         Sminus_list = [[-a[1], a[0]] for a in Sminus_list]
         self.basis = {(0, 0): Array(Sminus_list)}
         super(TrimmedSerendipityFace, self).__init__(ref_el=ref_el, degree=degree, mapping="contravariant piola")
-        
